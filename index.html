@@ -258,13 +258,20 @@ async function renderStudentDashboard(c){
 // ========== 학생: 나의 목표 (수정버튼 + 실천과제 하위) ==========
 async function renderStudentGoals(c){
   const r=await api('getStudentGoals',{studentId:state.user.id});const goals=r.goals||[];
-  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><span class="text-sm" style="color:var(--text-light)">총 ${goals.length}개 목표</span><button class="btn btn-primary" onclick="showGoalModal()">➕ 새 목표 추가</button></div><div class="goals-list">`;
-  if(!goals.length)html+='<div class="empty-state"><div class="icon">🎯</div><div class="title">아직 목표가 없습니다</div><div class="desc">새 목표를 추가하세요!</div></div>';
+  let html=`<div style="margin-bottom:16px"><span class="text-sm" style="color:var(--text-light)">총 ${goals.length}개 목표</span></div><div class="goals-list">`;
+  if(!goals.length)html+='<div class="empty-state"><div class="icon">🎯</div><div class="title">아직 목표가 없습니다</div></div>';
   else goals.forEach(g=>{
-    const aHtml=(g.actions||[]).map(a=>`<div class="action-item"><div class="action-info"><div class="action-title">${a.title}</div><div class="action-freq">${a.frequency} · ${a.completedChecks||0}/${a.totalChecks||0}회</div></div><div class="action-progress" style="color:${pColor(a.progress)}">${a.progress}%</div></div>`).join('');
+    const aHtml=(g.actions||[]).map(a=>{
+      const t=a.title||a['과제명']||'(제목없음)';
+      const f=a.frequency||a['주기']||'매일';
+      const cc=a.completedChecks||0;const tc=a.totalChecks||0;const p=a.progress||0;
+      const aid=a.actionId||a['과제ID']||'';
+      return`<div class="action-item" style="cursor:pointer" onclick="showActionEditModal('${aid}','${t.replace(/'/g,"\\'")}','${f}','${g.goalId}')"><div class="action-info"><div class="action-title">${t}</div><div class="action-freq">${f} · ${cc}/${tc}회 완료</div></div><div class="action-progress" style="color:${pColor(p)}">${p}%</div></div>`;
+    }).join('');
+    const gt=g.title.replace(/'/g,"\\'");
     html+=`<div class="goal-card expanded" id="goal-${g.goalId}"><div class="goal-card-header" onclick="toggleGoal('${g.goalId}')"><div class="goal-info"><div class="goal-title"><span class="category-badge ${g.category}">${g.category}</span> ${g.title}</div><div class="goal-meta"><span>📋 ${(g.actions||[]).length}개 과제</span></div></div>
       <div style="display:flex;align-items:center;gap:8px"><div class="goal-progress"><div class="perc" style="color:${pColor(g.progress)}">${g.progress}%</div></div>
-      <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();showGoalEditModal('${g.goalId}','${g.title.replace(/'/g,"\\'")}','${g.category}')">✏️</button></div>
+      <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();showGoalEditModal('${g.goalId}','${gt}','${g.category}')">✏️</button></div>
     </div><div class="goal-card-body">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h4 style="font-size:.9rem;font-weight:600">실천과제</h4><button class="btn btn-sm btn-primary" onclick="showActionModal('${g.goalId}')">➕ 과제 추가</button></div>
       <div class="action-list">${aHtml||'<div style="color:var(--text-lighter);font-size:.85rem;padding:12px">실천과제를 추가해 주세요</div>'}</div>
@@ -292,7 +299,6 @@ async function renderCheckCalendar(c){
       <div class="calendar-header"><h3>📅 ${state.calYear}년 ${state.calMonth+1}월</h3>
         <div class="cal-nav"><button onclick="chgMonth(-1)">◀</button><button onclick="state.calYear=${now.getFullYear()};state.calMonth=${now.getMonth()};navigateTo('check')">오늘</button><button onclick="chgMonth(1)">▶</button></div></div>
       <div class="calendar-grid">${gridHtml}</div>
-      <div class="calendar-legend"><span><div class="dot" style="background:#10b981"></div> 전체 잘함</span><span><div class="dot" style="background:#fef3c7;border:1px solid #fbbf24"></div> 혼합</span><span><div class="dot" style="background:#fee2e2;border:1px solid #fca5a5"></div> 미흡 포함</span></div>
     </div>
     <div id="dayActionArea" style="margin-top:16px"></div>`;
   // 오늘 날짜 자동 표시
@@ -303,23 +309,23 @@ function chgMonth(d){state.calMonth+=d;if(state.calMonth>11){state.calMonth=0;st
 async function showDayActions(dateStr){
   const gR=await api('getStudentGoals',{studentId:state.user.id});const goals=gR.goals||[];
   let allActions=[];goals.forEach(g=>(g.actions||[]).forEach(a=>allActions.push({...a,goalTitle:g.title,goalCategory:g.category})));
-  // 각 과제의 해당일 체크 상태 조회
-  const checksP=allActions.map(a=>api('getChecks',{actionId:a.actionId,yearMonth:dateStr.substring(0,7)}));
+  const checksP=allActions.map(a=>api('getChecks',{actionId:a.actionId||a['과제ID'],yearMonth:dateStr.substring(0,7)}));
   const checksR=await Promise.all(checksP);
 
   const area=document.getElementById('dayActionArea');
-  area.innerHTML=`<div class="card"><div class="card-header"><h3>📋 ${dateStr} 실천과제 수행</h3></div><div class="card-body">
-    ${allActions.map((a,idx)=>{const cks=checksR[idx]?.checks||[];const dayCheck=cks.find(c=>String(c.date)===dateStr);const rating=dayCheck?.rating||'미수행';
-      return`<div class="action-item" style="flex-direction:column;align-items:stretch;gap:8px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div class="action-info"><div class="action-title">${a.title}</div><div class="action-freq"><span class="category-badge ${a.goalCategory}">${a.goalCategory}</span> ${a.goalTitle}</div></div>
+  area.innerHTML=`<div class="card"><div class="card-header"><h3>📋 ${dateStr} 실천과제</h3></div><div class="card-body">
+    ${allActions.length?allActions.map((a,idx)=>{const cks=checksR[idx]?.checks||[];const dayCheck=cks.find(c=>String(c.date)===dateStr);const rating=dayCheck?.rating||'미수행';
+      const t=a.title||a['과제명']||'';const aid=a.actionId||a['과제ID']||'';
+      return`<div style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div><strong style="font-size:.9rem">${t}</strong><br><span style="font-size:.75rem;color:var(--text-light)">${a.goalTitle}</span></div>
           ${rating!=='미수행'?`<span class="rating-badge ${rating}">${rating}</span>`:''}
         </div>
         <div class="rating-group">
-          <button class="rating-btn ${rating==='잘함'?'잘함':''}" onclick="saveRating('${a.actionId}','${dateStr}','잘함',this)">😊 잘함</button>
-          <button class="rating-btn ${rating==='보통'?'보통':''}" onclick="saveRating('${a.actionId}','${dateStr}','보통',this)">😐 보통</button>
-          <button class="rating-btn ${rating==='미흡'?'미흡':''}" onclick="saveRating('${a.actionId}','${dateStr}','미흡',this)">😔 미흡</button>
-        </div></div>`;}).join('')}
+          <button class="rating-btn ${rating==='잘함'?'잘함':''}" onclick="saveRating('${aid}','${dateStr}','잘함',this)">😊 잘함</button>
+          <button class="rating-btn ${rating==='보통'?'보통':''}" onclick="saveRating('${aid}','${dateStr}','보통',this)">😐 보통</button>
+          <button class="rating-btn ${rating==='미흡'?'미흡':''}" onclick="saveRating('${aid}','${dateStr}','미흡',this)">😔 미흡</button>
+        </div></div>`;}).join(''):'<div class="empty-state"><div class="desc">실천과제가 없습니다</div></div>'}
   </div></div>`;
 }
 async function saveRating(actionId,date,rating,btn){
@@ -343,20 +349,29 @@ async function renderMentorDashboard(c){const r=await api('getMentorDashboard',{
 
 // ========== 멘토: 멘티 관리 + 피드백 통합 ==========
 async function renderMenteeManagement(c){const r=await api('getMentees',{teacherId:state.user.id});const mentees=r.mentees||[];
-  c.innerHTML=`<div class="goals-list">${mentees.map(m=>{const sc=m.progress>=70?'good':m.progress>=40?'warning':'danger';
-    return`<div class="card"><div class="card-header"><h3>${m.name} <span class="text-sm" style="color:var(--text-light)">${m.grade}학년 ${m.classNum}반 ${m.number}번</span></h3><span class="status-badge ${sc}">${m.progress}%</span></div><div class="card-body">
-      <div style="display:flex;gap:16px;margin-bottom:12px;font-size:.85rem;color:var(--text-light)"><span>🎯 목표 ${m.goalCount}개</span><span>📋 과제 ${m.actionCount}개</span><span>💬 피드백 ${m.feedbackCount||0}건</span><span>📅 최근: ${m.lastActivity}</span></div>
-      ${m.goals?.length?'<div style="margin-bottom:12px">'+m.goals.map(g=>`<span class="category-badge ${g.category}" style="margin-right:4px">${g.category}</span> <span style="font-size:.85rem">${g.title}</span><br>`).join('')+'</div>':''}
-      <div style="background:#f8fafc;border-radius:var(--radius-sm);padding:14px;margin-top:8px">
-        <div style="font-weight:600;font-size:.85rem;margin-bottom:8px">✍️ 피드백 작성</div>
-        <div style="display:flex;gap:6px;margin-bottom:8px">
-          <button class="rating-btn" onclick="this.parentElement.querySelectorAll('.rating-btn').forEach(b=>b.className='rating-btn');this.classList.add('active-잘함');this.parentElement.dataset.type='격려'" style="font-size:.75rem">😊 격려</button>
-          <button class="rating-btn" onclick="this.parentElement.querySelectorAll('.rating-btn').forEach(b=>b.className='rating-btn');this.classList.add('active-보통');this.parentElement.dataset.type='조언'" style="font-size:.75rem">💡 조언</button>
-          <button class="rating-btn" onclick="this.parentElement.querySelectorAll('.rating-btn').forEach(b=>b.className='rating-btn');this.classList.add('active-미흡');this.parentElement.dataset.type='점검'" style="font-size:.75rem">📋 점검</button>
-        </div>
-        <textarea id="fb-${m.id}" rows="2" placeholder="피드백 내용..." style="min-height:50px"></textarea>
-        <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="sendMenteeFeedback('${m.id}',this)">전송</button><label style="font-size:.78rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="fbEmail-${m.id}"> 이메일 알림</label></div>
-      </div></div></div>`;}).join('')}</div>`;
+  c.innerHTML=`<div class="card"><div class="card-header"><h3>👥 멘티 목록 (${mentees.length}명)</h3></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>이름</th><th>학년/반</th><th>목표</th><th>달성률</th><th>최근활동</th><th>상태</th></tr></thead><tbody>${mentees.map(m=>{const sc=m.progress>=70?'good':m.progress>=40?'warning':'danger';const st=m.progress>=70?'양호':m.progress>=40?'보통':'주의';
+    return`<tr style="cursor:pointer" onclick="showMenteeDetail('${m.id}')"><td style="font-weight:600">${m.name}</td><td>${m.grade}-${m.classNum}</td><td>${m.goalCount}</td><td><div class="progress-bar" style="width:60px;display:inline-block;vertical-align:middle"><div class="fill ${sc}" style="width:${m.progress}%"></div></div> ${m.progress}%</td><td>${m.lastActivity}</td><td><span class="status-badge ${sc}">${st}</span></td></tr>`;}).join('')}</tbody></table>
+  </div></div><div id="menteeDetailArea" style="margin-top:16px"></div>`;
+}
+async function showMenteeDetail(sid){
+  const r=await api('getMentees',{teacherId:state.user.id});const m=(r.mentees||[]).find(x=>x.id===sid);if(!m)return;
+  const fR=await api('getFeedback',{studentId:sid});const fb=fR.feedback||[];
+  const sc=m.progress>=70?'good':m.progress>=40?'warning':'danger';
+  document.getElementById('menteeDetailArea').innerHTML=`<div class="card"><div class="card-header"><h3>${m.name} <span class="text-sm" style="color:var(--text-light)">${m.grade}학년 ${m.classNum}반 ${m.number}번</span></h3><span class="status-badge ${sc}">${m.progress}%</span></div><div class="card-body">
+    <div style="display:flex;gap:16px;margin-bottom:12px;font-size:.85rem;color:var(--text-light)"><span>🎯 목표 ${m.goalCount}개</span><span>📋 과제 ${m.actionCount}개</span><span>💬 피드백 ${m.feedbackCount||0}건</span><span>📅 최근: ${m.lastActivity}</span></div>
+    ${m.goals?.length?'<div style="margin-bottom:16px">'+m.goals.map(g=>`<span class="category-badge ${g.category}" style="margin-right:4px">${g.category}</span> <span style="font-size:.85rem">${g.title}</span><br>`).join('')+'</div>':''}
+    ${fb.length?'<div style="margin-bottom:16px"><div style="font-weight:600;font-size:.85rem;margin-bottom:8px">최근 피드백</div><div class="feedback-list">'+fb.slice(0,3).map(f=>`<div class="feedback-item ${f.type}"><div class="fb-header"><span class="fb-type">${f.type}</span> <span class="date">${f.date}</span></div><div class="fb-content">${f.content}</div></div>`).join('')+'</div></div>':''}
+    <div style="background:#f8fafc;border-radius:var(--radius-sm);padding:14px">
+      <div style="font-weight:600;font-size:.85rem;margin-bottom:8px">✍️ 새 피드백 작성</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px" id="fbTypeGroup-${sid}">
+        <button class="rating-btn" onclick="this.parentElement.querySelectorAll('.rating-btn').forEach(b=>b.className='rating-btn');this.classList.add('active-잘함');this.parentElement.dataset.type='격려'" style="font-size:.75rem">😊 격려</button>
+        <button class="rating-btn" onclick="this.parentElement.querySelectorAll('.rating-btn').forEach(b=>b.className='rating-btn');this.classList.add('active-보통');this.parentElement.dataset.type='조언'" style="font-size:.75rem">💡 조언</button>
+        <button class="rating-btn" onclick="this.parentElement.querySelectorAll('.rating-btn').forEach(b=>b.className='rating-btn');this.classList.add('active-미흡');this.parentElement.dataset.type='점검'" style="font-size:.75rem">📋 점검</button>
+      </div>
+      <textarea id="fb-${sid}" rows="2" placeholder="피드백 내용..." style="min-height:50px"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="sendMenteeFeedback('${sid}',this)">전송</button><label style="font-size:.78rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="fbEmail-${sid}"> 이메일 알림</label></div>
+    </div></div></div>`;
 }
 async function sendMenteeFeedback(sid,btn){const ta=document.getElementById('fb-'+sid);const content=ta.value.trim();if(!content){showToast('내용을 작성해 주세요','error');return;}
   const typeEl=btn.closest('.card-body').querySelector('[data-type]');const type=typeEl?.dataset.type||'격려';const sendEmail=document.getElementById('fbEmail-'+sid)?.checked;
@@ -393,7 +408,7 @@ function handleCSV(input,type){const file=input.files[0];if(!file)return;Papa.pa
   else{const teachers=data.map(r=>({id:r['교사ID']||r.id||'T'+Math.floor(Math.random()*900+100),name:r['이름']||r.name,subject:r['담당과목']||r.subject||'',role:r['역할']||r.role||'멘토',email:r['이메일']||r.email||''})).filter(t=>t.name);
     window._pTeachers=teachers;div.innerHTML=`<p style="font-weight:600">${teachers.length}명 감지</p><button class="btn btn-success w-full" style="margin-top:8px" onclick="doUpload('teacher')">✅ 업로드 확정</button>`;}}});}
 async function doUpload(type){showToast('업로드 중...','info');if(type==='student'&&window._pStudents){const r=await api('uploadStudents',{students:window._pStudents},'POST');showToast(`${r.uploadedCount}명 완료!`,'success');}else if(window._pTeachers){const r=await api('uploadTeachers',{teachers:window._pTeachers},'POST');showToast(`${r.uploadedCount}명 완료!`,'success');}}
-async function doExport(type){const r=await api('exportData',{type});if(r.success){const b=new Blob([JSON.stringify(r.data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`goal_${type}_${new Date().toISOString().split('T')[0]}.json`;a.click();showToast('완료!','success');}}
+async function doExport(type){showToast('내보내기 중...','info');const r=await api('exportData',{type});if(r.success){let csv,filename;if(type==='all'){Object.entries(r.data).forEach(([k,v])=>{const b=new Blob(['\uFEFF'+v],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`${k}_${new Date().toISOString().split('T')[0]}.csv`;a.click();});showToast('전체 CSV 다운로드!','success');}else{csv=r.csv||'';filename=r.filename||`${type}.csv`;const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=filename;a.click();showToast(`${filename} 다운로드!`,'success');}}}
 
 // ========== 관리자: 멘토 배정 ==========
 async function renderMentorAssignment(c){const r=await api('getAllMentorAssignments');const a=r.assignments||[];const t=r.teachers||[];const opts=t.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
@@ -440,13 +455,109 @@ function printSelectedCerts(){const checked=document.querySelectorAll('.cert-che
 async function dlCertPDF(){const el=document.getElementById('certPreview');if(!el)return;showToast('PDF 생성 중...','info');try{const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff'});const img=canvas.toDataURL('image/png');const{jsPDF}=window.jspdf;const pdf=new jsPDF('l','mm','a4');const w=pdf.internal.pageSize.getWidth();const h=pdf.internal.pageSize.getHeight();const ratio=canvas.width/canvas.height;const pw=w-40;const ph=pw/ratio;pdf.addImage(img,'PNG',20,(h-ph)/2,pw,ph);pdf.save('인증서.pdf');showToast('완료!','success');}catch(e){showToast('실패','error');}}
 
 // ========== 관리자: PDF 보고서 + 인쇄 통합 ==========
-async function renderReports(c){c.innerHTML=`<div class="card"><div class="card-header"><h3>📑 보고서 생성 & 인쇄</h3></div><div class="card-body"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
-  <div class="card" style="cursor:pointer" onclick="genStudentPDF()"><div class="card-body text-center"><div style="font-size:2rem">🎓</div><div style="font-weight:700;font-size:.9rem">학생별 보고서</div></div></div>
-  <div class="card" style="cursor:pointer" onclick="genOverallPDF()"><div class="card-body text-center"><div style="font-size:2rem">📊</div><div style="font-weight:700;font-size:.9rem">전체 현황</div></div></div>
-  <div class="card" style="cursor:pointer" onclick="window.print()"><div class="card-body text-center"><div style="font-size:2rem">🖨️</div><div style="font-weight:700;font-size:.9rem">현재 화면 인쇄</div></div></div>
-</div></div></div>`;}
-async function genStudentPDF(){showToast('생성 중...','info');const r=await api('getStudentReport',{studentId:'S10101'});const rp=r.report;if(!rp)return;const{jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');const w=doc.internal.pageSize.getWidth();doc.setFont('helvetica','bold');doc.setFontSize(16);doc.text('My Goal Report - '+rp.student.name,w/2,20,{align:'center'});doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text(`${rp.student.grade}-${rp.student.classNum}-${rp.student.number} | Mentor: ${rp.student.mentorName}`,w/2,28,{align:'center'});let y=40;doc.text(`Goals: ${rp.summary.totalGoals} | Progress: ${rp.summary.overallProgress}% | Checks: ${rp.summary.completedChecks}/${rp.summary.totalChecks}`,14,y);y+=12;rp.goals.forEach(g=>{doc.setFont('helvetica','bold');doc.text(`[${g.category}] ${g.title} - ${g.progress}%`,14,y);y+=7;doc.setFont('helvetica','normal');g.actions.forEach(a=>{doc.text(`  ${a.title}: ${a.completed}/${a.checks}`,18,y);y+=6;});y+=4;});doc.save(`report_${rp.student.name}.pdf`);showToast('완료!','success');}
-async function genOverallPDF(){showToast('생성 중...','info');const r=await api('getAdminDashboard');const d=r.dashboard;const{jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');const w=doc.internal.pageSize.getWidth();doc.setFont('helvetica','bold');doc.setFontSize(16);doc.text('Goal System Overall Report',w/2,20,{align:'center'});doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text('Oseong Middle School | '+new Date().toLocaleDateString('ko-KR'),w/2,28,{align:'center'});let y=42;doc.text(`Students: ${d.totalStudents} | Goals: ${d.totalGoals} | Progress: ${d.overallProgress}%`,14,y);y+=8;doc.text(`Checks: ${d.completedChecks}/${d.totalChecks} | Feedback: ${d.totalFeedback}`,14,y);y+=14;doc.setFont('helvetica','bold');doc.text('Class Statistics',14,y);y+=8;(d.classStats||[]).forEach(cs=>{doc.setFont('helvetica','normal');doc.text(`${cs.grade}-${cs.classNum}: ${cs.count} students, ${cs.avgProgress}%`,14,y);y+=6;});doc.save('overall_report.pdf');showToast('완료!','success');}
+async function renderReports(c){
+  const sR=await api('getStudentList',{});const students=sR.students||[];
+  c.innerHTML=`<div class="card"><div class="card-header"><h3>📑 PDF 보고서 생성</h3></div><div class="card-body">
+    <div class="two-col">
+      <div class="card"><div class="card-body">
+        <div style="font-size:1.5rem;text-align:center;margin-bottom:8px">🎓</div>
+        <div style="font-weight:700;text-align:center;margin-bottom:12px">학생별 보고서</div>
+        <div class="form-group"><label>학생 선택</label><select id="reportStudent"><option value="">학생을 선택하세요</option>${students.map(s=>`<option value="${s.id}">${s.name} (${s.grade}-${s.classNum}-${s.number})</option>`).join('')}</select></div>
+        <button class="btn btn-primary w-full" onclick="genStudentPDF()">📄 PDF 생성 & 다운로드</button>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div style="font-size:1.5rem;text-align:center;margin-bottom:8px">📊</div>
+        <div style="font-weight:700;text-align:center;margin-bottom:12px">전체 현황 보고서</div>
+        <p class="text-sm" style="color:var(--text-light);text-align:center;margin-bottom:12px">전체 학생의 목표/수행 현황을<br>종합한 보고서를 생성합니다</p>
+        <button class="btn btn-accent w-full" onclick="genOverallPDF()">📄 PDF 생성 & 다운로드</button>
+      </div></div>
+    </div>
+  </div></div>`;}
+
+async function genStudentPDF(){
+  const sid=document.getElementById('reportStudent')?.value;
+  if(!sid){showToast('학생을 선택해 주세요','error');return;}
+  showToast('보고서 생성 중...','info');
+  const r=await api('getStudentReport',{studentId:sid});const rp=r.report;if(!rp){showToast('데이터 없음','error');return;}
+  try{
+    const{jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');const w=doc.internal.pageSize.getWidth();
+    // 헤더
+    doc.setFillColor(30,58,95);doc.rect(0,0,w,35,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);
+    doc.text('Goal Achievement Report',w/2,18,{align:'center'});
+    doc.setFontSize(11);doc.setFont('helvetica','normal');
+    doc.text(`${rp.student.name} | ${rp.student.grade}-${rp.student.classNum}-${rp.student.number} | Mentor: ${rp.student.mentorName}`,w/2,28,{align:'center'});
+    // 요약
+    doc.setTextColor(0,0,0);let y=48;
+    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('Summary',14,y);y+=10;
+    doc.setFont('helvetica','normal');doc.setFontSize(10);
+    doc.text(`Total Goals: ${rp.summary.totalGoals}`,14,y);
+    doc.text(`Total Actions: ${rp.summary.totalActions}`,80,y);
+    doc.text(`Overall Progress: ${rp.summary.overallProgress}%`,146,y);y+=7;
+    doc.text(`Good: ${rp.summary.good||0}`,14,y);
+    doc.text(`Normal: ${rp.summary.normal||0}`,80,y);
+    doc.text(`Poor: ${rp.summary.poor||0}`,146,y);y+=7;
+    doc.text(`Total Checks: ${rp.summary.completedChecks}/${rp.summary.totalChecks}`,14,y);
+    doc.text(`Feedback: ${rp.summary.totalFeedback}`,146,y);y+=14;
+    // 목표 상세
+    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('Goals & Actions',14,y);y+=10;
+    (rp.goals||[]).forEach(g=>{
+      if(y>260){doc.addPage();y=20;}
+      doc.setFillColor(240,244,248);doc.rect(12,y-4,w-24,8,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(10);
+      doc.setTextColor(30,58,95);doc.text(`[${g.category}] ${g.title}`,14,y);y+=8;
+      doc.setTextColor(0,0,0);doc.setFont('helvetica','normal');doc.setFontSize(9);
+      (g.actions||[]).forEach(a=>{
+        const total=a.total||0;const good=a.good||0;const normal=a.normal||0;const poor=a.poor||0;
+        doc.text(`  - ${a.title} (${a.frequency})  |  Good:${good}  Normal:${normal}  Poor:${poor}  (Total:${total})`,16,y);y+=6;
+      });y+=4;
+    });
+    // 날짜
+    doc.setFontSize(8);doc.setTextColor(150);
+    doc.text('Generated: '+new Date().toLocaleString('ko-KR'),14,285);
+    doc.text('Oseong Middle School - My Goal System',w-14,285,{align:'right'});
+    doc.save(`보고서_${rp.student.name}.pdf`);
+    showToast('PDF 다운로드 완료!','success');
+  }catch(e){showToast('PDF 생성 오류: '+e.message,'error');console.error(e);}
+}
+
+async function genOverallPDF(){
+  showToast('전체 보고서 생성 중...','info');
+  const r=await api('getAdminDashboard');const d=r.dashboard;if(!d){showToast('데이터 없음','error');return;}
+  try{
+    const{jsPDF}=window.jspdf;const doc=new jsPDF('p','mm','a4');const w=doc.internal.pageSize.getWidth();
+    // 헤더
+    doc.setFillColor(30,58,95);doc.rect(0,0,w,35,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);
+    doc.text('Overall Status Report',w/2,18,{align:'center'});
+    doc.setFontSize(11);doc.setFont('helvetica','normal');
+    doc.text(`Oseong Middle School | ${new Date().toLocaleDateString('ko-KR')}`,w/2,28,{align:'center'});
+    // 요약
+    doc.setTextColor(0,0,0);let y=50;
+    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('Overview',14,y);y+=10;
+    doc.setFont('helvetica','normal');doc.setFontSize(10);
+    doc.text(`Students: ${d.totalStudents}`,14,y);doc.text(`Teachers: ${d.totalTeachers}`,80,y);doc.text(`Goals: ${d.totalGoals}`,146,y);y+=7;
+    doc.text(`Actions: ${d.totalActions}`,14,y);doc.text(`Progress: ${d.overallProgress}%`,80,y);doc.text(`Feedback: ${d.totalFeedback}`,146,y);y+=7;
+    doc.text(`Checks: ${d.completedChecks}/${d.totalChecks}`,14,y);doc.text(`Assigned: ${d.assignedStudents}/${d.totalStudents}`,146,y);y+=14;
+    // 학급별
+    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('Class Statistics',14,y);y+=10;
+    doc.setFont('helvetica','normal');doc.setFontSize(10);
+    (d.classStats||[]).forEach(cs=>{
+      const barW=cs.avgProgress*0.8;
+      doc.setFillColor(226,232,240);doc.rect(14,y-3,80,6,'F');
+      doc.setFillColor(cs.avgProgress>=70?16:cs.avgProgress>=40?245:239,cs.avgProgress>=70?185:cs.avgProgress>=40?158:68,cs.avgProgress>=70?129:cs.avgProgress>=40?11:68);
+      doc.rect(14,y-3,barW,6,'F');
+      doc.setTextColor(0);doc.text(`${cs.grade}-${cs.classNum} (${cs.count}students)`,100,y);
+      doc.text(`${cs.avgProgress}%`,170,y);y+=9;
+    });y+=8;
+    // 멘토별
+    if(d.mentorStats){doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('Mentor Assignments',14,y);y+=10;
+    doc.setFont('helvetica','normal');doc.setFontSize(10);
+    Object.values(d.mentorStats).forEach(m=>{doc.text(`${m.name} (${m.subject}): ${m.menteeCount} mentees`,14,y);y+=7;});}
+    doc.setFontSize(8);doc.setTextColor(150);doc.text('Generated: '+new Date().toLocaleString('ko-KR'),14,285);
+    doc.save('전체현황보고서.pdf');showToast('PDF 다운로드 완료!','success');
+  }catch(e){showToast('PDF 생성 오류: '+e.message,'error');console.error(e);}
+}
 
 // ========== Modals ==========
 function showGoalModal(){document.getElementById('modalContainer').innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-header"><h3>🎯 새 목표 추가</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-group"><label>목표명 *</label><input type="text" id="goalTitle" placeholder="예: 영어 실력 향상"></div><div class="form-group"><label>영역</label><select id="goalCategory"><option value="학습">📚 학습</option><option value="생활">🏠 생활</option><option value="특기">⭐ 특기</option><option value="봉사">🤝 봉사</option><option value="기타">📌 기타</option></select></div><div class="form-group"><label>실천과제 (엔터로 구분)</label><textarea id="goalActions" rows="4" placeholder="영어 단어 20개 암기&#10;영어 듣기 30분&#10;줄넘기 100개"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="saveNewGoal()">저장</button></div></div></div>`;}
@@ -456,10 +567,15 @@ async function saveNewGoal(){const title=document.getElementById('goalTitle').va
   showToast('목표 저장!🎯','success');closeModal();navigateTo('goals');}
 
 function showGoalEditModal(goalId,title,category){document.getElementById('modalContainer').innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-header"><h3>✏️ 목표 수정</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-group"><label>목표명</label><input type="text" id="editGoalTitle" value="${title}"></div><div class="form-group"><label>영역</label><select id="editGoalCat"><option value="학습" ${category==='학습'?'selected':''}>📚 학습</option><option value="생활" ${category==='생활'?'selected':''}>🏠 생활</option><option value="특기" ${category==='특기'?'selected':''}>⭐ 특기</option><option value="봉사" ${category==='봉사'?'selected':''}>🤝 봉사</option><option value="기타" ${category==='기타'?'selected':''}>📌 기타</option></select></div></div><div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteGoalConfirm('${goalId}')" style="margin-right:auto">🗑️ 삭제</button><button class="btn btn-outline" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="updateGoal('${goalId}')">수정</button></div></div></div>`;}
-async function updateGoal(goalId){const title=document.getElementById('editGoalTitle').value.trim();if(!title){showToast('목표명 입력','error');return;}await api('saveGoal',{goalId,studentId:state.user.id,title,category:document.getElementById('editGoalCat').value},'POST');showToast('수정 완료!','success');closeModal();navigateTo('goals');}
-async function deleteGoalConfirm(goalId){if(!confirm('이 목표를 삭제하시겠습니까? 관련 실천과제와 수행체크도 모두 삭제됩니다.'))return;await api('deleteGoal',{goalId},'POST');showToast('삭제 완료','info');closeModal();navigateTo('goals');}
+async function updateGoal(goalId){const t=document.getElementById('editGoalTitle').value.trim();if(!t){showToast('목표명 입력','error');return;}await api('saveGoal',{goalId,studentId:state.user.id,title:t,category:document.getElementById('editGoalCat').value},'POST');showToast('수정!','success');closeModal();navigateTo('goals');}
+async function deleteGoalConfirm(goalId){if(!confirm('목표와 관련 과제를 모두 삭제할까요?'))return;await api('deleteGoal',{goalId},'POST');showToast('삭제','info');closeModal();navigateTo('goals');}
 
-function showActionModal(goalId){document.getElementById('modalContainer').innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-header"><h3>📋 실천과제 추가</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-group"><label>과제명 *</label><input type="text" id="actionTitle" placeholder="예: 매일 영단어 20개"></div><div class="form-row"><div class="form-group"><label>주기</label><select id="actionFreq"><option value="매일">매일</option><option value="주 3회">주 3회</option><option value="주 1회">주 1회</option></select></div><div class="form-group"><label>목표 횟수</label><input type="number" id="actionTarget" value="30" min="1"></div></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="saveAction('${goalId}')">저장</button></div></div></div>`;}
+function showActionEditModal(actionId,title,frequency,goalId){
+  document.getElementById('modalContainer').innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-header"><h3>✏️ 실천과제 수정</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-group"><label>과제명</label><input type="text" id="editActionTitle" value="${title}"></div><div class="form-group"><label>주기</label><select id="editActionFreq"><option value="매일" ${frequency==='매일'?'selected':''}>매일</option><option value="주 5회" ${frequency==='주 5회'?'selected':''}>주 5회</option><option value="주 4회" ${frequency==='주 4회'?'selected':''}>주 4회</option><option value="주 3회" ${frequency==='주 3회'?'selected':''}>주 3회</option><option value="주 2회" ${frequency==='주 2회'?'selected':''}>주 2회</option><option value="주 1회" ${frequency==='주 1회'?'selected':''}>주 1회</option><option value="격주" ${frequency==='격주'?'selected':''}>격주</option><option value="월 2회" ${frequency==='월 2회'?'selected':''}>월 2회</option><option value="월 1회" ${frequency==='월 1회'?'selected':''}>월 1회</option></select></div></div><div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteActionConfirm('${actionId}')" style="margin-right:auto">🗑️ 삭제</button><button class="btn btn-outline" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="updateAction('${actionId}')">수정</button></div></div></div>`;}
+async function updateAction(actionId){const t=document.getElementById('editActionTitle').value.trim();if(!t){showToast('과제명 입력','error');return;}await api('saveActionItem',{actionId,title:t,frequency:document.getElementById('editActionFreq').value},'POST');showToast('수정!','success');closeModal();navigateTo('goals');}
+async function deleteActionConfirm(actionId){if(!confirm('이 실천과제를 삭제할까요?'))return;await api('deleteActionItem',{actionId},'POST');showToast('삭제','info');closeModal();navigateTo('goals');}
+
+function showActionModal(goalId){document.getElementById('modalContainer').innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-header"><h3>📋 실천과제 추가</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-group"><label>과제명 *</label><input type="text" id="actionTitle" placeholder="예: 매일 영단어 20개"></div><div class="form-row"><div class="form-group"><label>주기</label><select id="actionFreq"><option value="매일">매일</option><option value="주 5회">주 5회</option><option value="주 4회">주 4회</option><option value="주 3회">주 3회</option><option value="주 2회">주 2회</option><option value="주 1회">주 1회</option><option value="격주">격주</option><option value="월 2회">월 2회</option><option value="월 1회">월 1회</option></select></div><div class="form-group"><label>목표 횟수</label><input type="number" id="actionTarget" value="30" min="1"></div></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">취소</button><button class="btn btn-primary" onclick="saveAction('${goalId}')">저장</button></div></div></div>`;}
 async function saveAction(goalId){const t=document.getElementById('actionTitle').value.trim();if(!t){showToast('과제명 입력','error');return;}await api('saveActionItem',{goalId,studentId:state.user.id,title:t,frequency:document.getElementById('actionFreq').value,targetCount:document.getElementById('actionTarget').value},'POST');showToast('과제 추가!📋','success');closeModal();navigateTo('goals');}
 function closeModal(){document.getElementById('modalContainer').innerHTML='';}
 
