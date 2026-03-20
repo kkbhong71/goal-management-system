@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 나의 목표제 | 오성중학교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS Variables ========== */
+:root {
+  --primary: #1e3a5f;
+  --primary-light: #2d5a8e;
+  --primary-dark: #0f1f35;
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
+  --accent-dark: #d97706;
+  --success: #10b981;
+  --success-light: #34d399;
+  --danger: #ef4444;
+  --danger-light: #f87171;
+  --warning: #f97316;
+  --info: #3b82f6;
+  --bg: #f0f4f8;
+  --bg-card: #ffffff;
+  --bg-dark: #0f172a;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --text-lighter: #94a3b8;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== Reset & Base ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== Utility Classes ========== */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1 { gap: 8px; }
+.gap-2 { gap: 16px; }
+.gap-3 { gap: 24px; }
+.text-center { text-align: center; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.font-bold { font-weight: 700; }
+.w-full { width: 100%; }
+
+/* ========== Login Page ========== */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 40%, var(--primary-light) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 80vw;
+  height: 80vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);
+}
+.login-page::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -20%;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+}
+.login-container {
+  background: rgba(255,255,255,0.97);
+  border-radius: var(--radius-xl);
+  padding: 48px 40px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.login-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.login-logo .icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(245,158,11,0.3);
+}
+.login-logo h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+.login-logo p {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+.role-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.role-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+.role-btn:hover { border-color: var(--primary-light); color: var(--primary); }
+.role-btn.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: var(--transition);
+  background: white;
+  color: var(--text);
+}
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(30,58,95,0.1);
+}
+.form-row {
+  display: flex;
+  gap: 8px;
+}
+.form-row .form-group { flex: 1; }
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 8px;
+}
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(30,58,95,0.3);
+}
+.login-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 12px;
+  min-height: 20px;
+}
+
+/* ========== App Shell ========== */
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 260px;
+  background: var(--bg-dark);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sidebar-header .brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.sidebar-header .brand-text h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.sidebar-header .brand-text p {
+  font-size: 0.72rem;
+  opacity: 0.6;
+  margin-top: 1px;
+}
+.sidebar-user {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sidebar-user .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--info), var(--success));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.sidebar-user .user-info { flex: 1; }
+.sidebar-user .user-info .name { font-size: 0.85rem; font-weight: 600; }
+.sidebar-user .user-info .role { font-size: 0.7rem; opacity: 0.6; }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.nav-section { padding: 8px 20px 4px; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.4; font-weight: 600; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.7);
+  border-left: 3px solid transparent;
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+.nav-item.active {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+.nav-item .nav-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.btn-logout {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: var(--transition);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.btn-logout:hover { background: rgba(239,68,68,0.2); color: var(--danger-light); border-color: rgba(239,68,68,0.3); }
+
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 0;
+  min-height: 100vh;
+}
+.top-bar {
+  padding: 16px 32px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.top-bar h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.top-bar .date-display {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+.page-content {
+  padding: 28px 32px;
+}
+
+/* ========== Cards ========== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.card-body { padding: 22px; }
+.card-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  background: #fafbfc;
+}
+
+/* ========== Stat Cards ========== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.stat-card.blue::after { background: linear-gradient(90deg, var(--info), #60a5fa); }
+.stat-card.green::after { background: linear-gradient(90deg, var(--success), var(--success-light)); }
+.stat-card.gold::after { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+.stat-card.red::after { background: linear-gradient(90deg, var(--danger), var(--danger-light)); }
+.stat-card .stat-icon {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+.stat-card .stat-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+/* ========== Progress Ring ========== */
+.progress-ring-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.progress-ring { position: relative; width: 120px; height: 120px; }
+.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring circle {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.progress-ring .ring-bg { stroke: var(--border); }
+.progress-ring .ring-fill {
+  stroke: var(--success);
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-ring .ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.progress-ring .ring-text .percentage {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+.progress-ring .ring-text .sublabel {
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+/* ========== Progress Bar ========== */
+.progress-bar-container { margin: 6px 0; }
+.progress-bar-container .bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+.progress-bar-container .bar-label .name { font-weight: 500; color: var(--text); }
+.progress-bar-container .bar-label .value { color: var(--text-light); font-weight: 600; }
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar .fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--info), var(--success));
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-bar .fill.low { background: linear-gradient(90deg, var(--danger), var(--warning)); }
+.progress-bar .fill.mid { background: linear-gradient(90deg, var(--warning), var(--accent)); }
+.progress-bar .fill.high { background: linear-gradient(90deg, var(--success), var(--success-light)); }
+
+/* ========== Goal Cards ========== */
+.goals-list { display: flex; flex-direction: column; gap: 16px; }
+.goal-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.goal-card:hover { box-shadow: var(--shadow-md); }
+.goal-card-header {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.goal-card-header .goal-info { flex: 1; }
+.goal-card-header .goal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.goal-card-header .goal-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+.goal-card-header .goal-progress {
+  text-align: center;
+  min-width: 60px;
+}
+.goal-card-header .goal-progress .perc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.goal-card-body {
+  padding: 0 22px 18px;
+  display: none;
+}
+.goal-card.expanded .goal-card-body { display: block; }
+.category-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.category-badge.학습 { background: #dbeafe; color: #1e40af; }
+.category-badge.생활 { background: #d1fae5; color: #065f46; }
+.category-badge.특기 { background: #fef3c7; color: #92400e; }
+.category-badge.봉사 { background: #fce7f3; color: #9d174d; }
+.category-badge.기타 { background: #e2e8f0; color: #475569; }
+
+/* ========== Action Items ========== */
+.action-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.action-item .check-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.action-item .check-btn:hover { border-color: var(--success); }
+.action-item .check-btn.checked {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+.action-item .action-info { flex: 1; }
+.action-item .action-info .action-title { font-size: 0.9rem; font-weight: 500; }
+.action-item .action-info .action-freq { font-size: 0.75rem; color: var(--text-light); }
+.action-item .action-progress {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* ========== Check Calendar ========== */
+.check-calendar {
+  margin-top: 16px;
+}
+.check-calendar .month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.check-calendar .month-header h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.check-calendar .days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.check-calendar .day-header {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-light);
+  padding: 4px;
+}
+.check-calendar .day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+.check-calendar .day-cell.empty { cursor: default; }
+.check-calendar .day-cell.today { font-weight: 700; box-shadow: inset 0 0 0 2px var(--primary); }
+.check-calendar .day-cell.completed { background: var(--success); color: white; }
+.check-calendar .day-cell.missed { background: #fee2e2; color: var(--danger); }
+.check-calendar .day-cell:not(.empty):not(.completed):not(.missed):hover { background: var(--border); }
+
+/* ========== Feedback ========== */
+.feedback-list { display: flex; flex-direction: column; gap: 12px; }
+.feedback-item {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--info);
+}
+.feedback-item.격려 { border-left-color: var(--success); }
+.feedback-item.조언 { border-left-color: var(--info); }
+.feedback-item.점검 { border-left-color: var(--warning); }
+.feedback-item .fb-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+}
+.feedback-item .fb-header .teacher { font-weight: 600; color: var(--primary); }
+.feedback-item .fb-header .date { color: var(--text-lighter); }
+.feedback-item .fb-content { font-size: 0.9rem; line-height: 1.7; }
+.feedback-item .fb-type {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-right: 6px;
+}
+.feedback-item.격려 .fb-type { background: #d1fae5; color: #065f46; }
+.feedback-item.조언 .fb-type { background: #dbeafe; color: #1e40af; }
+.feedback-item.점검 .fb-type { background: #fef3c7; color: #92400e; }
+
+/* ========== Mentor Mentee List ========== */
+.mentee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.mentee-table th, .mentee-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.mentee-table th {
+  font-weight: 600;
+  color: var(--text-light);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #f8fafc;
+}
+.mentee-table tr:hover td { background: #f8fafc; }
+.mentee-table .status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.mentee-table .status-badge.good { background: #d1fae5; color: #065f46; }
+.mentee-table .status-badge.warning { background: #fef3c7; color: #92400e; }
+.mentee-table .status-badge.danger { background: #fee2e2; color: #991b1b; }
+
+/* ========== Buttons ========== */
+.btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:hover { background: var(--accent-dark); }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-sm { padding: 5px 12px; font-size: 0.78rem; }
+.btn-lg { padding: 12px 28px; font-size: 1rem; }
+
+/* ========== Modal ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-header h3 { font-size: 1.05rem; font-weight: 700; }
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.modal-close:hover { background: var(--danger-light); color: white; }
+.modal-body { padding: 24px; }
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ========== Textarea ========== */
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  resize: vertical;
+  min-height: 80px;
+  transition: var(--transition);
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(30,58,95,0.1);
+}
+
+/* ========== Streak ========== */
+.streak-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+.streak-display .flame { font-size: 1.5rem; }
+.streak-display .streak-text .count {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent-dark);
+}
+.streak-display .streak-text .label {
+  font-size: 0.78rem;
+  color: #92400e;
+}
+
+/* ========== Loading ========== */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== Toast ========== */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: slideInRight 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 280px;
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast.success { background: #065f46; color: white; }
+.toast.error { background: #991b1b; color: white; }
+.toast.info { background: var(--primary); color: white; }
+
+/* ========== Print ========== */
+.print-section { margin-top: 16px; }
+@media print {
+  .sidebar, .top-bar, .btn, .nav-item, .modal-overlay { display: none !important; }
+  .main-content { margin-left: 0 !important; }
+  .page-content { padding: 20px !important; }
+  .card { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; }
+  body { background: white; }
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .top-bar { padding: 12px 16px; }
+  .page-content { padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { flex-direction: column; }
+  .mobile-menu-btn { display: block !important; }
+}
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 99;
+}
+.mobile-overlay.show { display: block; }
+
+/* ========== Admin data table ========== */
+.data-table-wrapper { overflow-x: auto; }
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.data-table th, .data-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.data-table th { background: #f1f5f9; font-weight: 600; color: var(--text-light); white-space: nowrap; }
+.data-table tr:hover td { background: #f8fafc; }
+
+/* ========== Empty State ========== */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-light);
+}
+.empty-state .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+.empty-state .title { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+.empty-state .desc { font-size: 0.85rem; }
+
+/* ========== Two Column Layout ========== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .three-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ========== Toast Container ========== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div id="loginPage" class="login-page">
+  <div class="login-container">
+    <div class="login-logo">
+      <div class="icon">🎯</div>
+      <h1>나의 목표제</h1>
+      <p>오성중학교 특색사업</p>
+    </div>
+
+    <div class="role-selector">
+      <button class="role-btn active" onclick="selectLoginRole('student')">🎓 학생</button>
+      <button class="role-btn" onclick="selectLoginRole('teacher')">👨‍🏫 교사</button>
+    </div>
+
+    <!-- Student Login -->
+    <div id="studentLoginForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>학년</label>
+          <select id="loginGrade">
+            <option value="">선택</option>
+            <option value="1">1학년</option>
+            <option value="2">2학년</option>
+            <option value="3">3학년</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>반</label>
+          <select id="loginClass">
+            <option value="">선택</option>
+            <option value="1">1반</option>
+            <option value="2">2반</option>
+            <option value="3">3반</option>
+            <option value="4">4반</option>
+            <option value="5">5반</option>
+            <option value="6">6반</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>번호</label>
+          <select id="loginNumber">
+            <option value="">선택</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>PIN (4자리)</label>
+        <input type="password" id="loginStudentPin" maxlength="4" placeholder="PIN 번호 입력">
+      </div>
+    </div>
+
+    <!-- Teacher Login -->
+    <div id="teacherLoginForm" class="hidden">
+      <div class="form-group">
+        <label>이름</label>
+        <select id="loginTeacherName">
+          <option value="">교사 선택</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>PIN (4자리)</label>
+        <input type="password" id="loginTeacherPin" maxlength="4" placeholder="PIN 번호 입력">
+      </div>
+    </div>
+
+    <button class="btn-login" onclick="handleLogin()">로그인</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ========== APP SHELL ========== -->
+<div id="appShell" class="app-shell hidden">
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">🎯</div>
+        <div class="brand-text">
+          <h2>나의 목표제</h2>
+          <p>오성중학교</p>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar" id="userAvatar">홍</div>
+      <div class="user-info">
+        <div class="name" id="userName">홍길동</div>
+        <div class="role" id="userRole">1학년 1반 1번</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <!-- 동적으로 생성 -->
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="handleLogout()">🚪 로그아웃</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="flex items-center gap-1">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <h1 id="pageTitle">대시보드</h1>
+      </div>
+      <div class="date-display" id="dateDisplay"></div>
+    </div>
+    <div class="page-content" id="pageContent">
+      <!-- 동적으로 생성 -->
+    </div>
+  </main>
+</div>
+
+<!-- ========== MODAL CONTAINER ========== -->
+<div id="modalContainer"></div>
+
+<script>
+// ============================================================
+// 🎯 나의 목표제 관리 시스템 - Frontend Application
+// ============================================================
+
+// ========== Configuration ==========
+const CONFIG = {
+  // ⚠️ GAS Web App URL을 여기에 입력하세요
+  API_URL: 'YOUR_GAS_WEB_APP_URL_HERE',
+  SCHOOL_NAME: '오성중학교',
+  APP_NAME: '나의 목표제',
+  MAX_NUMBER: 40 // 최대 번호
+};
+
+// ========== State ==========
+const state = {
+  user: null,
+  currentPage: 'dashboard',
+  goals: [],
+  actions: [],
+  checks: [],
+  feedback: [],
+  mentees: [],
+  loading: false,
+  cache: {}
+};
+
+// ========== API Helper ==========
+async function api(action, params = {}, method = 'GET') {
+  try {
+    let url = CONFIG.API_URL;
+    if (method === 'GET') {
+      const query = new URLSearchParams({action, ...params}).toString();
+      url += '?' + query;
+      const res = await fetch(url, {redirect: 'follow'});
+      return await res.json();
+    } else {
+      const res = await fetch(url, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({action, ...params})
+      });
+      return await res.json();
+    }
+  } catch(err) {
+    console.error('API Error:', err);
+    // Demo mode: 시뮬레이션 데이터 반환
+    return getDemoData(action, params);
+  }
+}
+
+// ========== Demo Data (GAS 연결 전 테스트용) ==========
+function getDemoData(action, params) {
+  const demoStudents = [
+    {id:'S10101',name:'홍길동',grade:1,classNum:1,number:1,mentorId:'T002',mentorName:'박철수'},
+    {id:'S10102',name:'김민수',grade:1,classNum:1,number:2,mentorId:'T002',mentorName:'박철수'},
+    {id:'S10201',name:'이영희',grade:1,classNum:2,number:1,mentorId:'T003',mentorName:'이미영'},
+    {id:'S20101',name:'박지훈',grade:2,classNum:1,number:1,mentorId:'T004',mentorName:'정대호'},
+  ];
+  const demoTeachers = [
+    {id:'T001',name:'김영희',subject:'국어',role:'관리자'},
+    {id:'T002',name:'박철수',subject:'수학',role:'멘토'},
+    {id:'T003',name:'이미영',subject:'영어',role:'멘토'},
+    {id:'T004',name:'정대호',subject:'과학',role:'멘토'},
+  ];
+
+  switch(action) {
+    case 'login':
+      if (params.role === 'student') {
+        const s = demoStudents.find(s => String(s.grade)===String(params.grade) && String(s.classNum)===String(params.classNum) && String(s.number)===String(params.number));
+        if (s) return {success:true,user:{...s,role:'student'}};
+        return {success:false,error:'학생 정보를 찾을 수 없습니다.'};
+      } else {
+        const t = demoTeachers.find(t => t.name === params.name);
+        if (t) return {success:true,user:{...t,role:t.role==='관리자'?'admin':'mentor'}};
+        return {success:false,error:'교사 정보를 찾을 수 없습니다.'};
+      }
+    case 'getTeacherList':
+      return {success:true,teachers:demoTeachers};
+    case 'getStudentGoals':
+      return {success:true,goals:[
+        {goalId:'G001',title:'영어 실력 향상',description:'영어 듣기와 독해 능력을 키우겠다',category:'학습',progress:72,
+         actions:[
+           {과제ID:'A001',과제명:'영어 단어 20개 암기',주기:'매일',progress:80,completedChecks:16,totalChecks:20},
+           {과제ID:'A002',과제명:'영어 듣기 30분',주기:'매일',progress:65,completedChecks:13,totalChecks:20}
+         ]},
+        {goalId:'G002',title:'체력 향상',description:'매일 운동하여 건강한 몸을 만들겠다',category:'생활',progress:90,
+         actions:[
+           {과제ID:'A003',과제명:'줄넘기 100개',주기:'매일',progress:90,completedChecks:18,totalChecks:20}
+         ]},
+        {goalId:'G003',title:'독서 습관 기르기',description:'한 달에 2권 이상 읽기',category:'학습',progress:50,
+         actions:[
+           {과제ID:'A004',과제명:'매일 30분 독서',주기:'매일',progress:50,completedChecks:10,totalChecks:20}
+         ]}
+      ]};
+    case 'getStudentProgress':
+      return {success:true,progress:{
+        totalGoals:3,totalActions:4,totalChecks:80,completedChecks:57,
+        overallProgress:71,recentChecks:20,recentCompleted:16,streak:5,
+        categoryProgress:{학습:{total:60,completed:39},생활:{total:20,completed:18}}
+      }};
+    case 'getFeedback':
+      return {success:true,feedback:[
+        {feedbackId:'F001',teacherName:'박철수',type:'격려',content:'길동이 영어 공부 열심히 하고 있구나! 단어 암기 꾸준히 잘하고 있어서 칭찬해!',date:'2026-03-19'},
+        {feedbackId:'F002',teacherName:'박철수',type:'조언',content:'듣기할 때 받아쓰기도 함께 해보면 더 효과적일 거야. 화이팅!',date:'2026-03-15'},
+        {feedbackId:'F003',teacherName:'박철수',type:'점검',content:'줄넘기 100개 매일 하고 있다니 대단해! 꾸준함이 진짜 실력이야.',date:'2026-03-10'}
+      ]};
+    case 'getMentees':
+    case 'getMentorDashboard':
+      const mentees = [
+        {id:'S10101',name:'홍길동',grade:1,classNum:1,number:1,goalCount:3,actionCount:4,progress:71,lastActivity:'2026-03-20'},
+        {id:'S10102',name:'김민수',grade:1,classNum:1,number:2,goalCount:2,actionCount:3,progress:45,lastActivity:'2026-03-18'},
+      ];
+      if(action==='getMentorDashboard') return {success:true,dashboard:{totalMentees:2,avgProgress:58,mentees,needAttention:mentees.filter(m=>m.progress<50),excellent:mentees.filter(m=>m.progress>=80)}};
+      return {success:true,mentees};
+    case 'getAdminDashboard':
+      return {success:true,dashboard:{
+        totalStudents:110,totalTeachers:20,totalGoals:280,totalActions:650,
+        totalChecks:8500,completedChecks:5800,overallProgress:68,
+        assignedStudents:95,unassignedStudents:15,
+        noGoalStudents:[{id:'S30301',name:'최우진',grade:3,classNum:3},{id:'S30302',name:'강서연',grade:3,classNum:3}],
+        classStats:[
+          {grade:1,classNum:1,count:20,avgProgress:72},
+          {grade:1,classNum:2,count:18,avgProgress:65},
+          {grade:2,classNum:1,count:19,avgProgress:70},
+          {grade:2,classNum:2,count:18,avgProgress:58},
+          {grade:3,classNum:1,count:18,avgProgress:55},
+          {grade:3,classNum:2,count:17,avgProgress:60}
+        ],
+        mentorStats:{T002:{name:'박철수',subject:'수학',menteeCount:8},T003:{name:'이미영',subject:'영어',menteeCount:7},T004:{name:'정대호',subject:'과학',menteeCount:6}},
+        totalFeedback:145
+      }};
+    case 'getChecks':
+      const checks = [];
+      const today = new Date();
+      for(let i=0;i<20;i++){
+        const d=new Date(today);
+        d.setDate(d.getDate()-i);
+        const ds = d.toISOString().split('T')[0];
+        checks.push({checkId:'C'+i,actionId:params.actionId,date:ds,completed:Math.random()>0.3,note:''});
+      }
+      return {success:true,checks};
+    case 'saveCheck':
+      return {success:true};
+    case 'saveGoal':
+      return {success:true,goalId:'G'+Date.now()};
+    case 'saveActionItem':
+      return {success:true,actionId:'A'+Date.now()};
+    case 'saveFeedback':
+      return {success:true,feedbackId:'F'+Date.now()};
+    case 'getStudentList':
+      let filtered = demoStudents;
+      if(params.grade) filtered = filtered.filter(s=>String(s.grade)===String(params.grade));
+      return {success:true,students:filtered};
+    case 'getAllMentorAssignments':
+      return {success:true,assignments:demoStudents,teachers:demoTeachers};
+    default:
+      return {success:true};
+  }
+}
+
+// ========== Login Functions ==========
+let loginRole = 'student';
+
+function selectLoginRole(role) {
+  loginRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('studentLoginForm').classList.toggle('hidden', role !== 'student');
+  document.getElementById('teacherLoginForm').classList.toggle('hidden', role !== 'teacher');
+  document.getElementById('loginError').textContent = '';
+  
+  if (role === 'teacher') loadTeacherList();
+}
+
+async function loadTeacherList() {
+  const result = await api('getTeacherList');
+  if (result.success) {
+    const sel = document.getElementById('loginTeacherName');
+    sel.innerHTML = '<option value="">교사 선택</option>';
+    result.teachers.forEach(t => {
+      sel.innerHTML += `<option value="${t.name}">${t.name} (${t.subject})</option>`;
+    });
+  }
+}
+
+async function handleLogin() {
+  document.getElementById('loginError').textContent = '';
+  let params = {role: loginRole};
+  
+  if (loginRole === 'student') {
+    params.grade = document.getElementById('loginGrade').value;
+    params.classNum = document.getElementById('loginClass').value;
+    params.number = document.getElementById('loginNumber').value;
+    params.pin = document.getElementById('loginStudentPin').value;
+    if (!params.grade || !params.classNum || !params.number) {
+      document.getElementById('loginError').textContent = '학년, 반, 번호를 모두 선택해 주세요.';
+      return;
+    }
+  } else {
+    params.name = document.getElementById('loginTeacherName').value;
+    params.pin = document.getElementById('loginTeacherPin').value;
+    if (!params.name) {
+      document.getElementById('loginError').textContent = '교사를 선택해 주세요.';
+      return;
+    }
+  }
+  
+  const result = await api('login', params);
+  if (result.success) {
+    state.user = result.user;
+    sessionStorage.setItem('user', JSON.stringify(result.user));
+    showApp();
+  } else {
+    document.getElementById('loginError').textContent = result.error || '로그인에 실패했습니다.';
+  }
+}
+
+function handleLogout() {
+  state.user = null;
+  sessionStorage.removeItem('user');
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('appShell').classList.add('hidden');
+}
+
+// ========== Number dropdown ==========
+(function() {
+  const sel = document.getElementById('loginNumber');
+  for (let i = 1; i <= CONFIG.MAX_NUMBER; i++) {
+    sel.innerHTML += `<option value="${i}">${i}번</option>`;
+  }
+})();
+
+// ========== App Shell ==========
+function showApp() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('appShell').classList.remove('hidden');
+  
+  // Update user info in sidebar
+  document.getElementById('userName').textContent = state.user.name;
+  document.getElementById('userAvatar').textContent = state.user.name.charAt(0);
+  
+  if (state.user.role === 'student') {
+    document.getElementById('userRole').textContent = `${state.user.grade}학년 ${state.user.classNum}반 ${state.user.number}번`;
+  } else if (state.user.role === 'mentor') {
+    document.getElementById('userRole').textContent = `멘토교사 · ${state.user.subject}`;
+  } else {
+    document.getElementById('userRole').textContent = '업무담당교사 (관리자)';
+  }
+  
+  buildNavigation();
+  updateDateDisplay();
+  navigateTo('dashboard');
+}
+
+function buildNavigation() {
+  const nav = document.getElementById('sidebarNav');
+  let items = [];
+  
+  if (state.user.role === 'student') {
+    items = [
+      {id:'dashboard', icon:'📊', label:'대시보드'},
+      {id:'goals', icon:'🎯', label:'나의 목표'},
+      {id:'check', icon:'✅', label:'오늘의 수행체크'},
+      {id:'feedback', icon:'💬', label:'멘토 피드백'},
+    ];
+  } else if (state.user.role === 'mentor') {
+    items = [
+      {id:'dashboard', icon:'📊', label:'대시보드'},
+      {id:'mentees', icon:'👥', label:'멘티 관리'},
+      {id:'write-feedback', icon:'✍️', label:'피드백 작성'},
+    ];
+  } else { // admin
+    items = [
+      {id:'dashboard', icon:'📊', label:'대시보드'},
+      {id:'students', icon:'👥', label:'학생 관리'},
+      {id:'mentors', icon:'🤝', label:'멘토 배정'},
+      {id:'class-stats', icon:'📈', label:'학년/반 통계'},
+      {id:'data-mgmt', icon:'📁', label:'데이터 관리'},
+      {id:'print', icon:'🖨️', label:'인쇄'},
+    ];
+  }
+  
+  nav.innerHTML = '<div class="nav-section">메뉴</div>';
+  items.forEach(item => {
+    nav.innerHTML += `
+      <div class="nav-item ${item.id === 'dashboard' ? 'active' : ''}" data-page="${item.id}" onclick="navigateTo('${item.id}')">
+        <span class="nav-icon">${item.icon}</span>
+        <span>${item.label}</span>
+      </div>`;
+  });
+}
+
+function navigateTo(page) {
+  state.currentPage = page;
+  
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const activeNav = document.querySelector(`.nav-item[data-page="${page}"]`);
+  if (activeNav) activeNav.classList.add('active');
+  
+  // Close mobile sidebar
+  closeSidebar();
+  
+  // Route to page
+  const pageNames = {
+    dashboard:'대시보드', goals:'나의 목표', check:'오늘의 수행체크', feedback:'멘토 피드백',
+    mentees:'멘티 관리', 'write-feedback':'피드백 작성', students:'학생 관리',
+    mentors:'멘토 배정', 'class-stats':'학년/반 통계', 'data-mgmt':'데이터 관리', print:'인쇄'
+  };
+  document.getElementById('pageTitle').textContent = pageNames[page] || page;
+  
+  renderPage(page);
+}
+
+async function renderPage(page) {
+  const container = document.getElementById('pageContent');
+  container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
+  
+  if (state.user.role === 'student') {
+    switch(page) {
+      case 'dashboard': await renderStudentDashboard(container); break;
+      case 'goals': await renderStudentGoals(container); break;
+      case 'check': await renderDailyCheck(container); break;
+      case 'feedback': await renderStudentFeedback(container); break;
+    }
+  } else if (state.user.role === 'mentor') {
+    switch(page) {
+      case 'dashboard': await renderMentorDashboard(container); break;
+      case 'mentees': await renderMenteeList(container); break;
+      case 'write-feedback': await renderWriteFeedback(container); break;
+    }
+  } else { // admin
+    switch(page) {
+      case 'dashboard': await renderAdminDashboard(container); break;
+      case 'students': await renderStudentManagement(container); break;
+      case 'mentors': await renderMentorAssignment(container); break;
+      case 'class-stats': await renderClassStats(container); break;
+      case 'data-mgmt': await renderDataManagement(container); break;
+      case 'print': await renderPrintPage(container); break;
+    }
+  }
+}
+
+// ========== Student Pages ==========
+async function renderStudentDashboard(container) {
+  const [progressRes, goalsRes, feedbackRes] = await Promise.all([
+    api('getStudentProgress', {studentId: state.user.id}),
+    api('getStudentGoals', {studentId: state.user.id}),
+    api('getFeedback', {studentId: state.user.id})
+  ]);
+  
+  const p = progressRes.progress;
+  const goals = goalsRes.goals || [];
+  const fb = (feedbackRes.feedback || []).slice(0, 3);
+  
+  const circumference = 2 * Math.PI * 50;
+  const dashOffset = circumference - (p.overallProgress / 100) * circumference;
+  
+  let catHtml = '';
+  if (p.categoryProgress) {
+    Object.entries(p.categoryProgress).forEach(([cat, data]) => {
+      const pct = data.total > 0 ? Math.round(data.completed / data.total * 100) : 0;
+      const cls = pct >= 70 ? 'high' : pct >= 40 ? 'mid' : 'low';
+      catHtml += `
+        <div class="progress-bar-container">
+          <div class="bar-label"><span class="name">${cat}</span><span class="value">${pct}%</span></div>
+          <div class="progress-bar"><div class="fill ${cls}" style="width:${pct}%"></div></div>
+        </div>`;
+    });
+  }
+  
+  let goalsHtml = goals.slice(0, 3).map(g => {
+    const cls = g.progress >= 70 ? 'high' : g.progress >= 40 ? 'mid' : 'low';
+    return `
+      <div class="progress-bar-container">
+        <div class="bar-label"><span class="name">${g.title}</span><span class="value">${g.progress}%</span></div>
+        <div class="progress-bar"><div class="fill ${cls}" style="width:${g.progress}%"></div></div>
+      </div>`;
+  }).join('');
+  
+  let fbHtml = fb.length > 0 ? fb.map(f => `
+    <div class="feedback-item ${f.type}">
+      <div class="fb-header">
+        <span><span class="fb-type">${f.type}</span><span class="teacher">${f.teacherName} 선생님</span></span>
+        <span class="date">${f.date}</span>
+      </div>
+      <div class="fb-content">${f.content}</div>
+    </div>
+  `).join('') : '<div class="empty-state"><div class="icon">💬</div><div class="desc">아직 멘토 피드백이 없습니다</div></div>';
+  
+  container.innerHTML = `
+    ${p.streak > 0 ? `
+    <div class="streak-display">
+      <span class="flame">🔥</span>
+      <div class="streak-text">
+        <div class="count">${p.streak}일 연속</div>
+        <div class="label">수행 중! 대단해요!</div>
+      </div>
+    </div>` : ''}
+
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value">${p.totalGoals}</div>
+        <div class="stat-label">설정한 목표</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">📋</div>
+        <div class="stat-value">${p.totalActions}</div>
+        <div class="stat-label">실천과제</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">${p.completedChecks}/${p.totalChecks}</div>
+        <div class="stat-label">수행 완료</div>
+      </div>
+      <div class="stat-card ${p.overallProgress >= 70 ? 'green' : p.overallProgress >= 40 ? 'gold' : 'red'}">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value">${p.overallProgress}%</div>
+        <div class="stat-label">전체 달성률</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <h3>📊 전체 달성률</h3>
+        </div>
+        <div class="card-body" style="display:flex;gap:24px;align-items:center;">
+          <div class="progress-ring-container">
+            <div class="progress-ring">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                <circle class="ring-fill" cx="60" cy="60" r="50"
+                  stroke-dasharray="${circumference}"
+                  stroke-dashoffset="${dashOffset}"
+                  style="stroke:${p.overallProgress >= 70 ? 'var(--success)' : p.overallProgress >= 40 ? 'var(--accent)' : 'var(--danger)'}"/>
+              </svg>
+              <div class="ring-text">
+                <div class="percentage">${p.overallProgress}%</div>
+                <div class="sublabel">달성률</div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:0.85rem;color:var(--text-light);margin-bottom:12px;">영역별 진행률</div>
+            ${catHtml || '<div style="color:var(--text-lighter);font-size:0.85rem;">영역 데이터 없음</div>'}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>🎯 목표별 진행률</h3>
+          <button class="btn btn-sm btn-outline" onclick="navigateTo('goals')">전체보기</button>
+        </div>
+        <div class="card-body">
+          ${goalsHtml || '<div class="empty-state"><div class="icon">🎯</div><div class="desc">목표를 설정해 주세요</div></div>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <h3>💬 최근 멘토 피드백</h3>
+        ${state.user.mentorName ? `<span class="text-sm" style="color:var(--text-light)">멘토: ${state.user.mentorName} 선생님</span>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="feedback-list">${fbHtml}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function renderStudentGoals(container) {
+  const result = await api('getStudentGoals', {studentId: state.user.id});
+  const goals = result.goals || [];
+  
+  let html = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div>
+        <div class="text-sm" style="color:var(--text-light)">총 ${goals.length}개의 목표를 설정했습니다</div>
+      </div>
+      <button class="btn btn-primary" onclick="showGoalModal()">➕ 새 목표 추가</button>
+    </div>
+    <div class="goals-list">`;
+  
+  if (goals.length === 0) {
+    html += `<div class="empty-state"><div class="icon">🎯</div><div class="title">아직 목표가 없습니다</div><div class="desc">새 목표를 추가해서 나의 목표제를 시작하세요!</div></div>`;
+  } else {
+    goals.forEach(g => {
+      const actionsHtml = (g.actions || []).map(a => {
+        const cls = a.progress >= 70 ? 'high' : a.progress >= 40 ? 'mid' : 'low';
+        return `
+          <div class="action-item">
+            <div class="action-info">
+              <div class="action-title">${a['과제명'] || a.title || ''}</div>
+              <div class="action-freq">${a['주기'] || a.frequency || '매일'} · ${a.completedChecks||0}/${a.totalChecks||0}회 완료</div>
+            </div>
+            <div class="action-progress" style="color:${a.progress>=70?'var(--success)':a.progress>=40?'var(--accent)':'var(--danger)'}">${a.progress}%</div>
+          </div>`;
+      }).join('');
+      
+      html += `
+        <div class="goal-card" id="goal-${g.goalId}">
+          <div class="goal-card-header" onclick="toggleGoal('${g.goalId}')">
+            <div class="goal-info">
+              <div class="goal-title">
+                <span class="category-badge ${g.category}">${g.category}</span>
+                ${g.title}
+              </div>
+              <div class="goal-meta">
+                <span>📋 실천과제 ${(g.actions||[]).length}개</span>
+                <span>📅 ${g.createdAt ? g.createdAt.split(' ')[0] : ''}</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="perc" style="color:${g.progress>=70?'var(--success)':g.progress>=40?'var(--accent)':'var(--danger)'}">${g.progress}%</div>
+              <div class="text-xs" style="color:var(--text-lighter)">달성률</div>
+            </div>
+          </div>
+          <div class="goal-card-body">
+            <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:12px;">${g.description || ''}</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <h4 style="font-size:0.9rem;font-weight:600;">실천과제</h4>
+              <button class="btn btn-sm btn-outline" onclick="showActionModal('${g.goalId}')">➕ 과제 추가</button>
+            </div>
+            <div class="action-list">${actionsHtml || '<div style="color:var(--text-lighter);font-size:0.85rem;padding:12px;">실천과제를 추가해 주세요</div>'}</div>
+          </div>
+        </div>`;
+    });
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+async function renderDailyCheck(container) {
+  const result = await api('getStudentGoals', {studentId: state.user.id});
+  const goals = result.goals || [];
+  const today = new Date().toISOString().split('T')[0];
+  
+  let allActions = [];
+  goals.forEach(g => {
+    (g.actions || []).forEach(a => {
+      allActions.push({...a, goalTitle: g.title, goalCategory: g.category});
+    });
+  });
+  
+  // Get today's checks
+  const checksPromises = allActions.map(a => api('getChecks', {actionId: a['과제ID'] || a.actionId, yearMonth: today.substring(0, 7)}));
+  const checksResults = await Promise.all(checksPromises);
+  
+  let html = `
+    <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">
+      <div class="card-body" style="display:flex;align-items:center;gap:16px;">
+        <span style="font-size:2.5rem;">📅</span>
+        <div>
+          <h2 style="font-size:1.2rem;font-weight:700;">오늘의 수행체크</h2>
+          <p style="opacity:0.8;font-size:0.9rem;">${formatDate(new Date())} · 오늘도 화이팅!</p>
+        </div>
+      </div>
+    </div>
+    <div class="goals-list">`;
+  
+  allActions.forEach((a, idx) => {
+    const checks = checksResults[idx]?.checks || [];
+    const todayCheck = checks.find(c => c.date === today);
+    const isChecked = todayCheck?.completed;
+    const actionId = a['과제ID'] || a.actionId;
+    
+    html += `
+      <div class="action-item" style="padding:16px 20px;" id="check-item-${actionId}">
+        <div class="check-btn ${isChecked ? 'checked' : ''}" onclick="toggleDailyCheck('${actionId}', ${!isChecked})" id="check-btn-${actionId}">
+          ${isChecked ? '✓' : ''}
+        </div>
+        <div class="action-info">
+          <div class="action-title">${a['과제명'] || a.title}</div>
+          <div class="action-freq">
+            <span class="category-badge ${a.goalCategory}" style="font-size:0.68rem;">${a.goalCategory}</span>
+            ${a.goalTitle} · ${a['주기'] || a.frequency || '매일'}
+          </div>
+        </div>
+        <div class="action-progress" style="color:${a.progress>=70?'var(--success)':a.progress>=40?'var(--accent)':'var(--danger)'}">${a.progress}%</div>
+      </div>`;
+  });
+  
+  if (allActions.length === 0) {
+    html += '<div class="empty-state"><div class="icon">✅</div><div class="title">실천과제가 없습니다</div><div class="desc">먼저 목표와 실천과제를 설정해 주세요</div></div>';
+  }
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+async function toggleDailyCheck(actionId, completed) {
+  const today = new Date().toISOString().split('T')[0];
+  await api('saveCheck', {actionId, studentId: state.user.id, date: today, completed}, 'POST');
+  
+  const btn = document.getElementById('check-btn-' + actionId);
+  if (btn) {
+    btn.classList.toggle('checked', completed);
+    btn.textContent = completed ? '✓' : '';
+  }
+  showToast(completed ? '수행 완료! 잘했어요! 👏' : '체크가 해제되었습니다', completed ? 'success' : 'info');
+}
+
+async function renderStudentFeedback(container) {
+  const result = await api('getFeedback', {studentId: state.user.id});
+  const fb = result.feedback || [];
+  
+  let html = `
+    <div class="card">
+      <div class="card-header">
+        <h3>💬 멘토 피드백 (${fb.length}건)</h3>
+        ${state.user.mentorName ? `<span class="text-sm" style="color:var(--text-light)">멘토: ${state.user.mentorName} 선생님</span>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="feedback-list">`;
+  
+  if (fb.length === 0) {
+    html += '<div class="empty-state"><div class="icon">💬</div><div class="title">아직 피드백이 없습니다</div><div class="desc">멘토 선생님의 피드백을 기다려 주세요</div></div>';
+  } else {
+    fb.forEach(f => {
+      html += `
+        <div class="feedback-item ${f.type}">
+          <div class="fb-header">
+            <span><span class="fb-type">${f.type}</span><span class="teacher">${f.teacherName} 선생님</span></span>
+            <span class="date">${f.date}</span>
+          </div>
+          <div class="fb-content">${f.content}</div>
+        </div>`;
+    });
+  }
+  html += '</div></div></div>';
+  container.innerHTML = html;
+}
+
+// ========== Mentor Pages ==========
+async function renderMentorDashboard(container) {
+  const result = await api('getMentorDashboard', {teacherId: state.user.id});
+  const d = result.dashboard;
+  
+  const circumference = 2 * Math.PI * 50;
+  const dashOffset = circumference - (d.avgProgress / 100) * circumference;
+  
+  let needAttnHtml = (d.needAttention || []).map(m => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-weight:500;">${m.name} (${m.grade}-${m.classNum})</span>
+      <span class="mentee-table status-badge danger">${m.progress}%</span>
+    </div>`).join('') || '<div style="color:var(--text-lighter);font-size:0.85rem;">모든 멘티가 잘 하고 있습니다! 👏</div>';
+  
+  let excellentHtml = (d.excellent || []).map(m => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-weight:500;">${m.name}</span>
+      <span class="mentee-table status-badge good">${m.progress}%</span>
+    </div>`).join('') || '<div style="color:var(--text-lighter);font-size:0.85rem;">아직 80% 이상 달성 학생이 없습니다</div>';
+  
+  container.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card blue"><div class="stat-icon">👥</div><div class="stat-value">${d.totalMentees}</div><div class="stat-label">담당 멘티</div></div>
+      <div class="stat-card ${d.avgProgress>=60?'green':'gold'}"><div class="stat-icon">📊</div><div class="stat-value">${d.avgProgress}%</div><div class="stat-label">평균 달성률</div></div>
+      <div class="stat-card red"><div class="stat-icon">⚠️</div><div class="stat-value">${(d.needAttention||[]).length}</div><div class="stat-label">주의 필요</div></div>
+      <div class="stat-card green"><div class="stat-icon">🌟</div><div class="stat-value">${(d.excellent||[]).length}</div><div class="stat-label">우수 멘티</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><h3>⚠️ 관심 필요 학생</h3></div>
+        <div class="card-body">${needAttnHtml}</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>🌟 우수 학생</h3></div>
+        <div class="card-body">${excellentHtml}</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><h3>👥 전체 멘티 현황</h3></div>
+      <div class="card-body">
+        <table class="mentee-table">
+          <thead><tr><th>이름</th><th>학년/반</th><th>목표</th><th>달성률</th><th>최근활동</th><th>상태</th><th>액션</th></tr></thead>
+          <tbody>
+            ${(d.mentees||[]).map(m => {
+              const statusCls = m.progress >= 70 ? 'good' : m.progress >= 40 ? 'warning' : 'danger';
+              const statusText = m.progress >= 70 ? '양호' : m.progress >= 40 ? '보통' : '주의';
+              return `<tr>
+                <td style="font-weight:600;">${m.name}</td>
+                <td>${m.grade}학년 ${m.classNum}반</td>
+                <td>${m.goalCount}개</td>
+                <td><div class="progress-bar" style="width:80px;display:inline-block;vertical-align:middle;"><div class="fill ${statusCls}" style="width:${m.progress}%"></div></div> ${m.progress}%</td>
+                <td>${m.lastActivity}</td>
+                <td><span class="status-badge ${statusCls}">${statusText}</span></td>
+                <td><button class="btn btn-sm btn-outline" onclick="showMenteeDetail('${m.id}','${m.name}')">상세</button>
+                    <button class="btn btn-sm btn-accent" onclick="showFeedbackModal('${m.id}','${m.name}')">피드백</button></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+async function renderMenteeList(container) {
+  await renderMentorDashboard(container); // 같은 내용
+}
+
+async function renderWriteFeedback(container) {
+  const result = await api('getMentees', {teacherId: state.user.id});
+  const mentees = result.mentees || [];
+  
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3>✍️ 멘토 피드백 작성</h3></div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>학생 선택</label>
+          <select id="fbStudent">
+            <option value="">학생을 선택하세요</option>
+            ${mentees.map(m => `<option value="${m.id}">${m.name} (${m.grade}학년 ${m.classNum}반)</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>피드백 유형</label>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline fb-type-btn active" data-type="격려" onclick="selectFbType(this)">😊 격려</button>
+            <button class="btn btn-outline fb-type-btn" data-type="조언" onclick="selectFbType(this)">💡 조언</button>
+            <button class="btn btn-outline fb-type-btn" data-type="점검" onclick="selectFbType(this)">📋 점검</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>피드백 내용</label>
+          <textarea id="fbContent" rows="5" placeholder="학생에게 전하고 싶은 말을 작성해 주세요..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-lg w-full" onclick="submitFeedback()">✉️ 피드백 전송</button>
+      </div>
+    </div>`;
+}
+
+let selectedFbType = '격려';
+function selectFbType(el) {
+  document.querySelectorAll('.fb-type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedFbType = el.dataset.type;
+}
+
+async function submitFeedback() {
+  const studentId = document.getElementById('fbStudent').value;
+  const content = document.getElementById('fbContent').value;
+  if (!studentId) { showToast('학생을 선택해 주세요', 'error'); return; }
+  if (!content.trim()) { showToast('피드백 내용을 작성해 주세요', 'error'); return; }
+  
+  const result = await api('saveFeedback', {studentId, teacherId: state.user.id, type: selectedFbType, content}, 'POST');
+  if (result.success) {
+    showToast('피드백이 전송되었습니다! ✉️', 'success');
+    document.getElementById('fbContent').value = '';
+  } else {
+    showToast(result.error || '전송 실패', 'error');
+  }
+}
+
+// ========== Admin Pages ==========
+async function renderAdminDashboard(container) {
+  const result = await api('getAdminDashboard');
+  const d = result.dashboard;
+  
+  let classStatsHtml = (d.classStats||[]).map(c => {
+    const cls = c.avgProgress >= 70 ? 'high' : c.avgProgress >= 40 ? 'mid' : 'low';
+    return `
+      <div class="progress-bar-container">
+        <div class="bar-label"><span class="name">${c.grade}학년 ${c.classNum}반 (${c.count}명)</span><span class="value">${c.avgProgress}%</span></div>
+        <div class="progress-bar"><div class="fill ${cls}" style="width:${c.avgProgress}%"></div></div>
+      </div>`;
+  }).join('');
+  
+  let mentorHtml = '';
+  if (d.mentorStats) {
+    Object.entries(d.mentorStats).forEach(([id, m]) => {
+      mentorHtml += `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span><strong>${m.name}</strong> (${m.subject})</span>
+          <span style="color:var(--text-light);">${m.menteeCount}명 담당</span>
+        </div>`;
+    });
+  }
+  
+  let noGoalHtml = (d.noGoalStudents||[]).slice(0, 5).map(s => 
+    `<span style="display:inline-block;padding:3px 10px;background:#fee2e2;border-radius:12px;font-size:0.78rem;margin:2px;">${s.name}(${s.grade}-${s.classNum})</span>`
+  ).join('');
+  
+  container.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card blue"><div class="stat-icon">👥</div><div class="stat-value">${d.totalStudents}</div><div class="stat-label">전체 학생</div></div>
+      <div class="stat-card green"><div class="stat-icon">🎯</div><div class="stat-value">${d.totalGoals}</div><div class="stat-label">설정된 목표</div></div>
+      <div class="stat-card gold"><div class="stat-icon">📊</div><div class="stat-value">${d.overallProgress}%</div><div class="stat-label">전체 달성률</div></div>
+      <div class="stat-card red"><div class="stat-icon">⚠️</div><div class="stat-value">${d.unassignedStudents}</div><div class="stat-label">미배정 학생</div></div>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-card blue"><div class="stat-icon">✅</div><div class="stat-value">${d.completedChecks}/${d.totalChecks}</div><div class="stat-label">수행체크 현황</div></div>
+      <div class="stat-card green"><div class="stat-icon">👨‍🏫</div><div class="stat-value">${d.totalTeachers}</div><div class="stat-label">참여 교사</div></div>
+      <div class="stat-card gold"><div class="stat-icon">💬</div><div class="stat-value">${d.totalFeedback}</div><div class="stat-label">피드백 건수</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><h3>📈 학년/반별 달성률</h3></div>
+        <div class="card-body">${classStatsHtml || '<div style="color:var(--text-lighter)">데이터 없음</div>'}</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>👨‍🏫 멘토별 담당 현황</h3></div>
+        <div class="card-body">${mentorHtml || '<div style="color:var(--text-lighter)">멘토 배정 정보 없음</div>'}</div>
+      </div>
+    </div>
+
+    ${(d.noGoalStudents||[]).length > 0 ? `
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><h3>⚠️ 목표 미설정 학생 (${(d.noGoalStudents||[]).length}명)</h3></div>
+      <div class="card-body">${noGoalHtml}</div>
+    </div>` : ''}
+  `;
+}
+
+async function renderStudentManagement(container) {
+  const result = await api('getStudentList', {});
+  const students = result.students || [];
+  
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <h3>👥 학생 목록 (${students.length}명)</h3>
+        <button class="btn btn-primary" onclick="showUploadModal()">📤 학생 일괄 등록</button>
+      </div>
+      <div class="card-body">
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>학생ID</th><th>이름</th><th>학년</th><th>반</th><th>번호</th><th>멘토</th></tr></thead>
+            <tbody>
+              ${students.map(s => `
+                <tr><td>${s.id}</td><td style="font-weight:600;">${s.name}</td><td>${s.grade}학년</td><td>${s.classNum}반</td><td>${s.number}번</td><td>${s.mentorName || '-'}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function renderMentorAssignment(container) {
+  const result = await api('getAllMentorAssignments');
+  const assignments = result.assignments || [];
+  const teachers = result.teachers || [];
+  
+  const teacherOptions = teachers.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3>🤝 멘토-멘티 배정</h3></div>
+      <div class="card-body">
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>학생</th><th>학년/반/번호</th><th>현재 멘토</th><th>멘토 변경</th></tr></thead>
+            <tbody>
+              ${assignments.map(a => `
+                <tr>
+                  <td style="font-weight:600;">${a.studentName}</td>
+                  <td>${a.grade}학년 ${a.classNum}반 ${a.number}번</td>
+                  <td>${a.mentorName || '<span style="color:var(--danger)">미배정</span>'}</td>
+                  <td>
+                    <select class="mentor-select" data-student="${a.studentId}" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:0.82rem;" onchange="changeMentor('${a.studentId}', this.value)">
+                      <option value="">선택</option>
+                      ${teacherOptions}
+                    </select>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function changeMentor(studentId, teacherId) {
+  if (!teacherId) return;
+  const result = await api('assignMentor', {studentId, teacherId}, 'POST');
+  if (result.success) {
+    showToast('멘토가 배정되었습니다!', 'success');
+  } else {
+    showToast(result.error || '배정 실패', 'error');
+  }
+}
+
+async function renderClassStats(container) {
+  const result = await api('getAdminDashboard');
+  const d = result.dashboard;
+  
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3>📈 학년/반별 상세 통계</h3><button class="btn btn-sm btn-outline" onclick="window.print()">🖨️ 인쇄</button></div>
+      <div class="card-body">
+        ${(d.classStats||[]).map(c => {
+          const cls = c.avgProgress >= 70 ? 'high' : c.avgProgress >= 40 ? 'mid' : 'low';
+          return `
+            <div style="margin-bottom:20px;padding:16px;background:#f8fafc;border-radius:var(--radius-sm);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <h4 style="font-weight:700;">${c.grade}학년 ${c.classNum}반</h4>
+                <span style="font-size:0.85rem;color:var(--text-light);">${c.count}명 · 평균 달성률 <strong style="color:${c.avgProgress>=70?'var(--success)':c.avgProgress>=40?'var(--accent)':'var(--danger)'}">${c.avgProgress}%</strong></span>
+              </div>
+              <div class="progress-bar"><div class="fill ${cls}" style="width:${c.avgProgress}%"></div></div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+async function renderDataManagement(container) {
+  container.innerHTML = `
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><h3>📤 데이터 업로드</h3></div>
+        <div class="card-body">
+          <div style="padding:20px;background:#f8fafc;border-radius:var(--radius-sm);margin-bottom:12px;text-align:center;border:2px dashed var(--border);">
+            <div style="font-size:2rem;margin-bottom:8px;">📁</div>
+            <p style="font-size:0.85rem;color:var(--text-light);">CSV/Excel 파일을 업로드하여<br>학생 명단과 목표를 일괄 등록합니다</p>
+            <input type="file" id="uploadFile" accept=".csv,.xlsx" style="margin-top:12px;">
+          </div>
+          <button class="btn btn-primary w-full" onclick="handleFileUpload()">📤 업로드 실행</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>📥 데이터 내보내기</h3></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn btn-outline w-full" onclick="handleExport('students')">👥 학생 목록 내보내기</button>
+            <button class="btn btn-outline w-full" onclick="handleExport('goals')">🎯 목표 목록 내보내기</button>
+            <button class="btn btn-outline w-full" onclick="handleExport('checks')">✅ 수행체크 내보내기</button>
+            <button class="btn btn-outline w-full" onclick="handleExport('feedback')">💬 피드백 내보내기</button>
+            <button class="btn btn-primary w-full" onclick="handleExport('all')">📦 전체 데이터 내보내기</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function renderPrintPage(container) {
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3>🖨️ 인쇄 메뉴</h3></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+          <button class="btn btn-outline btn-lg" onclick="printReport('student-goals')" style="height:80px;flex-direction:column;">
+            <span style="font-size:1.5rem;">🎯</span><br>학생별 목표 현황표
+          </button>
+          <button class="btn btn-outline btn-lg" onclick="printReport('class-progress')" style="height:80px;flex-direction:column;">
+            <span style="font-size:1.5rem;">📊</span><br>반별 달성률 보고서
+          </button>
+          <button class="btn btn-outline btn-lg" onclick="printReport('mentor-report')" style="height:80px;flex-direction:column;">
+            <span style="font-size:1.5rem;">👨‍🏫</span><br>멘토별 활동 보고서
+          </button>
+          <button class="btn btn-outline btn-lg" onclick="printReport('certificates')" style="height:80px;flex-direction:column;">
+            <span style="font-size:1.5rem;">🏆</span><br>우수 학생 인증서
+          </button>
+          <button class="btn btn-outline btn-lg" onclick="window.print()" style="height:80px;flex-direction:column;">
+            <span style="font-size:1.5rem;">📄</span><br>현재 화면 인쇄
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ========== Modals ==========
+function showGoalModal(goalId = null) {
+  const isEdit = !!goalId;
+  document.getElementById('modalContainer').innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>${isEdit ? '목표 수정' : '🎯 새 목표 추가'}</h3>
+          <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>목표명 *</label>
+            <input type="text" id="goalTitle" placeholder="예: 영어 실력 향상">
+          </div>
+          <div class="form-group">
+            <label>상세 설명</label>
+            <textarea id="goalDesc" placeholder="목표에 대한 구체적인 설명"></textarea>
+          </div>
+          <div class="form-group">
+            <label>영역</label>
+            <select id="goalCategory">
+              <option value="학습">📚 학습</option>
+              <option value="생활">🏠 생활</option>
+              <option value="특기">⭐ 특기</option>
+              <option value="봉사">🤝 봉사</option>
+              <option value="기타">📌 기타</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">취소</button>
+          <button class="btn btn-primary" onclick="saveGoalFromModal()">저장</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function saveGoalFromModal() {
+  const title = document.getElementById('goalTitle').value.trim();
+  if (!title) { showToast('목표명을 입력해 주세요', 'error'); return; }
+  
+  const result = await api('saveGoal', {
+    studentId: state.user.id,
+    title,
+    description: document.getElementById('goalDesc').value,
+    category: document.getElementById('goalCategory').value
+  }, 'POST');
+  
+  if (result.success) {
+    showToast('목표가 저장되었습니다! 🎯', 'success');
+    closeModal();
+    navigateTo('goals');
+  } else {
+    showToast(result.error || '저장 실패', 'error');
+  }
+}
+
+function showActionModal(goalId) {
+  document.getElementById('modalContainer').innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>📋 실천과제 추가</h3>
+          <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>실천과제명 *</label>
+            <input type="text" id="actionTitle" placeholder="예: 매일 영단어 20개 암기">
+          </div>
+          <div class="form-group">
+            <label>상세 설명</label>
+            <textarea id="actionDesc" placeholder="실천과제에 대한 설명"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>수행 주기</label>
+              <select id="actionFreq">
+                <option value="매일">매일</option>
+                <option value="주 3회">주 3회</option>
+                <option value="주 1회">주 1회</option>
+                <option value="월 2회">월 2회</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>목표 횟수</label>
+              <input type="number" id="actionTarget" value="30" min="1">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">취소</button>
+          <button class="btn btn-primary" onclick="saveActionFromModal('${goalId}')">저장</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function saveActionFromModal(goalId) {
+  const title = document.getElementById('actionTitle').value.trim();
+  if (!title) { showToast('실천과제명을 입력해 주세요', 'error'); return; }
+  
+  const result = await api('saveActionItem', {
+    goalId,
+    studentId: state.user.id,
+    title,
+    description: document.getElementById('actionDesc').value,
+    frequency: document.getElementById('actionFreq').value,
+    targetCount: document.getElementById('actionTarget').value
+  }, 'POST');
+  
+  if (result.success) {
+    showToast('실천과제가 추가되었습니다! 📋', 'success');
+    closeModal();
+    navigateTo('goals');
+  } else {
+    showToast(result.error || '저장 실패', 'error');
+  }
+}
+
+function showFeedbackModal(studentId, studentName) {
+  document.getElementById('modalContainer').innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>✍️ ${studentName} 학생에게 피드백</h3>
+          <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>피드백 유형</label>
+            <select id="modalFbType">
+              <option value="격려">😊 격려</option>
+              <option value="조언">💡 조언</option>
+              <option value="점검">📋 점검</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>내용</label>
+            <textarea id="modalFbContent" rows="5" placeholder="학생에게 전하고 싶은 말을 작성해 주세요..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">취소</button>
+          <button class="btn btn-primary" onclick="submitModalFeedback('${studentId}')">전송</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function submitModalFeedback(studentId) {
+  const content = document.getElementById('modalFbContent').value.trim();
+  if (!content) { showToast('피드백 내용을 작성해 주세요', 'error'); return; }
+  
+  const result = await api('saveFeedback', {
+    studentId,
+    teacherId: state.user.id,
+    type: document.getElementById('modalFbType').value,
+    content
+  }, 'POST');
+  
+  if (result.success) {
+    showToast('피드백이 전송되었습니다! ✉️', 'success');
+    closeModal();
+  }
+}
+
+function showMenteeDetail(studentId, studentName) {
+  // 멘티 상세 보기 - 추후 구현 확장
+  showToast(`${studentName} 학생의 상세 정보를 불러오는 중...`, 'info');
+}
+
+function closeModal() {
+  document.getElementById('modalContainer').innerHTML = '';
+}
+
+// ========== Utility Functions ==========
+function toggleGoal(goalId) {
+  document.getElementById('goal-' + goalId)?.classList.toggle('expanded');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('show');
+}
+
+function updateDateDisplay() {
+  document.getElementById('dateDisplay').textContent = formatDate(new Date());
+}
+
+function formatDate(d) {
+  const days = ['일','월','화','수','목','금','토'];
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const icons = {success: '✅', error: '❌', info: 'ℹ️'};
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${icons[type] || ''}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(30px)'; setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+async function handleExport(type) {
+  showToast('데이터를 내보내는 중...', 'info');
+  const result = await api('exportData', {type});
+  if (result.success) {
+    const blob = new Blob([JSON.stringify(result.data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `goal_system_${type}_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('내보내기 완료!', 'success');
+  }
+}
+
+function printReport(type) {
+  showToast(`${type} 보고서를 준비하고 있습니다...`, 'info');
+  setTimeout(() => window.print(), 500);
+}
+
+// ========== Init ==========
+(function init() {
+  // 세션 복원
+  const saved = sessionStorage.getItem('user');
+  if (saved) {
+    state.user = JSON.parse(saved);
+    showApp();
+  }
+})();
+</script>
+</body>
+</html>
